@@ -1,0 +1,137 @@
+<div class="modal-backdrop" (click)="onBackdropClick($event)">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Add New Vehicle</h2>
+      <button class="close-button" (click)="onClose()">&times;</button>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" [formGroup]="vehicleForm">
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Vehicle Name
+              <span class="astericks">*</span>
+            </label>
+            <input type="text" formControlName="name" required>
+            <div class="error-message">
+              @if (checkInputFieldStatus('name') && vehicleForm.get('name')?.hasError('required')) {
+              <span>Vehicle name is required</span>
+              }
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="manufacturer">Manufacturer <span class="astericks">*</span></label>
+            <select id="manufacturer" formControlName="manufacturer" required>
+              <option value="">Select manufacturer...</option>
+              @for(manufacturer of manufacturers; track manufacturer) {
+              <option [value]="manufacturer">
+                {{ manufacturer }}
+              </option>
+              }
+            </select>
+            <div class="error-message">
+              @if (checkInputFieldStatus('manufacturer') && vehicleForm.get('manufacturer')?.hasError('required')) {
+              <span>Manufacturer is required</span>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="model">Model <span class="astericks">*</span></label>
+            <input type="text" formControlName="model" required>
+            <div class="error-message">
+              @if (checkInputFieldStatus('model') && vehicleForm.get('model')?.hasError('required')) {
+              <span>Model is required</span>
+              }
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="fuel">Fuel Type <span class="astericks">*</span></label>
+            <select id="fuel" formControlName="fuel" required>
+              <option value="">Select fuel type...</option>
+              @for(fuelType of fuelTypes; track fuelType) {
+              <option [value]="fuelType">
+                {{ fuelType }}
+              </option>
+              }
+            </select>
+            <div class="error-message">
+              @if (checkInputFieldStatus('fuel') && vehicleForm.get('fuel')?.hasError('required')) {
+              <span>Fuel type is required</span>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="type">Vehicle Type <span class="astericks">*</span></label>
+            <select id="type" formControlName="type" required>
+              <option value="">Select vehicle type...</option>
+              @for(vehicleType of vehicleTypes; track vehicleType) {
+              <option [value]="vehicleType">
+                {{ vehicleType }}
+              </option>
+              }
+            </select>
+            <div class="error-message">
+              @if (checkInputFieldStatus('type') &&vehicleForm.get('type')?.hasError('required')) {
+              <span>Vehicle type is required</span>
+              }
+            </div>
+          </div>
+
+          <div class="form-group full-widths">
+            <label for="vin">VIN (Vehicle Identification Number) <span class="astericks">*</span></label>
+            <input type="text" formControlName="vin" placeholder="17-character VIN" maxlength="17"
+              style="font-family: 'Courier New', monospace;" required>
+            <div class="error-message">
+              @if (checkInputFieldStatus('vin') && vehicleForm.get('vin')?.hasError('required')) {
+              <span>VIN is required</span>
+              }
+              @if (checkInputFieldStatus('vin') &&vehicleForm.get('vin')?.hasError('pattern')) {
+              <span>VIN must be 17 characters long</span>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="color">Color</label>
+            <input type="text" name="color" formControlName="color" placeholder="Optional">
+          </div>
+          <div class="form-group">
+            <label for="mileage">Mileage</label>
+            <input type="number" id="mileage" formControlName="mileage" placeholder="Optional" min="0">
+            <div class="error-message">
+              @if (checkInputFieldStatus('mileage') &&vehicleForm.get('mileage')?.hasError('min')) {
+              <span>Mileage cannot be negative</span>
+              }
+            </div>
+          </div>
+        </div>
+
+        @if (submitError()) {
+        <div class="submit-error">
+          {{ submitError() }}
+        </div>
+        }
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="cancel-button" (click)="onClose()" [disabled]="submitting()">
+          Cancel
+        </button>
+        <button type="submit" class="submit-button" [ngClass]="{'button-disabled': !vehicleForm.valid}"
+          [disabled]="!vehicleForm.valid || submitting()">
+          {{ submitting() ? 'Adding...' : 'Add Vehicle' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

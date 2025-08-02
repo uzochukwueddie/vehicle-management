@@ -1,0 +1,66 @@
+<div class="vehicle-list-container">
+  <header class="header">
+    <h1>Vehicle Management</h1>
+    <button class="add-button" (click)="openAddVehicleModal()">
+      Add New Vehicle
+    </button>
+  </header>
+
+  <div class="content">
+    @if (loading()) {
+    <div class="loading">
+      Loading vehicles...
+    </div>
+    }
+
+    @if (error()) {
+    <div class="error">
+      <p>{{ error() }}</p>
+      <button (click)="loadVehicles()" class="retry-button">Retry</button>
+    </div>
+    }
+
+    @if (!loading() && !error() && vehicles().length === 0) {
+    <div class="no-vehicles">
+      <div class="no-vehicles-icon">🚗</div>
+      <h2 class="no-vehicles-title">No Vehicles Found</h2>
+      <p class="no-vehicles-message">Your vehicle fleet is empty. Start building your collection by adding your first
+        vehicle.</p>
+      <button class="get-started-button" (click)="openAddVehicleModal()">
+        <span class="button-icon">+</span>
+        Add Your First Vehicle
+      </button>
+    </div>
+    }
+
+    @if (!loading() && !error() && totalItems() > 0) {
+    <div class="vehicles-section">
+      <div class="vehicles-grid">
+        @for(vehicle of vehicles(); track vehicle.id || $index) {
+        <div class="vehicle-card" (click)="onVehicleClick(vehicle)">
+          <h3 class="vehicle-name">{{ vehicle.name | vehicleName }}</h3>
+          <div class="vehicle-info">
+            <p><strong>Manufacturer:</strong> {{ vehicle.manufacturer | manufacturerName }}</p>
+            <p><strong>Model:</strong> {{ vehicle.model }}</p>
+            <p class="mileage">
+              <strong>Mileage:</strong> {{ vehicle.mileage | mileage }}
+            </p>
+          </div>
+          <div class="click-hint">Click for details →</div>
+        </div>
+        }
+      </div>
+
+      @if (vehicles().length) {
+      <app-pagination [currentPage]="currentPage()" [totalPages]="totalPages()"
+        (currentPageDataChange)="onCurrentPageData($event)" />
+      }
+    </div>
+    }
+
+  </div>
+
+  @if (showModal()) {
+  <app-vehicle-modal (close)="closeModal()" (vehicleAdded)="onVehicleAdded($event)" />
+  }
+</div>
